@@ -1,0 +1,80 @@
+
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Reporte de Pruebas Automatizadas</title>
+      <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        header { background-color: #4CAF50; color: white; padding: 20px; text-align: center; }
+        .summary { display: flex; justify-content: space-around; margin: 20px 0; }
+        .summary-item { text-align: center; padding: 10px; }
+        .test-case { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; }
+        .passed { border-left: 5px solid #4CAF50; }
+        .failed { border-left: 5px solid #f44336; }
+        .screenshot { max-width: 100%; margin-top: 10px; }
+      </style>
+    </head>
+    <body>
+      <header>
+        <h1>Reporte de Pruebas Automatizadas con Selenium</h1>
+        <p>Fecha: 11/4/2025, 12:59:03 p. m.</p>
+      </header>
+      
+      <div class="summary">
+        <div class="summary-item">
+          <h3>Total de Pruebas</h3>
+          <p>2</p>
+        </div>
+        <div class="summary-item">
+          <h3>Pruebas Exitosas</h3>
+          <p>2</p>
+        </div>
+        <div class="summary-item">
+          <h3>Pruebas Fallidas</h3>
+          <p>0</p>
+        </div>
+      </div>
+      
+      <h2>Detalles de las Pruebas</h2>
+      
+        <div class="test-case passed">
+          <h3>Inicio de sesión con credenciales inválidas</h3>
+          <p><strong>Estado:</strong> Exitoso</p>
+          <p><strong>Duración:</strong> 1506ms</p>
+          
+          
+            <div>
+              <p><strong>Captura de pantalla:</strong></p>
+              <img class="screenshot" src="screenshots\login_invalid_init_2025-04-11T16-59-00.763Z.png" alt="Captura de pantalla">
+            </div>
+          
+            <div>
+              <p><strong>Captura de pantalla:</strong></p>
+              <img class="screenshot" src="screenshots\login_invalid_error_2025-04-11T16-59-01.105Z.png" alt="Captura de pantalla">
+            </div>
+          
+        </div>
+      
+        <div class="test-case passed">
+          <h3>Inicio de sesión con credenciales válidas</h3>
+          <p><strong>Estado:</strong> Exitoso</p>
+          <p><strong>Duración:</strong> 3448ms</p>
+          
+          
+            <div>
+              <p><strong>Captura de pantalla:</strong></p>
+              <img class="screenshot" src="screenshots\login_valid_init_2025-04-11T16-59-01.234Z.png" alt="Captura de pantalla">
+            </div>
+          
+            <div>
+              <p><strong>Captura de pantalla:</strong></p>
+              <img class="screenshot" src="screenshots\login_valid_dashboard_2025-04-11T16-59-03.043Z.png" alt="Captura de pantalla">
+            </div>
+          
+        </div>
+      
+    </body>
+    </html>
+  

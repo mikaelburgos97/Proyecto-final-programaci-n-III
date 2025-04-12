@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito de Compras - Mi Tienda Online</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    header { background-color: #4CAF50; color: white; padding: 1rem; }
+    nav { display: flex; justify-content: space-between; align-items: center; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+    .cart-empty { text-align: center; margin: 3rem 0; }
+    .cart-table { width: 100%; border-collapse: collapse; }
+    .cart-table th, .cart-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #ddd; }
+    .cart-table th { background-color: #f9f9f9; }
+    .quantity-input { width: 60px; padding: 0.3rem; text-align: center; }
+    .remove-button { background-color: #f44336; color: white; border: none; padding: 0.3rem 0.6rem; cursor: pointer; }
+    .cart-summary { display: flex; justify-content: space-between; margin-top: 2rem; }
+    .checkout-button { background-color: #4CAF50; color: white; border: none; padding: 0.75rem 1.5rem; cursor: pointer; font-size: 1.1rem; }
+    .continue-shopping { margin-top: 1rem; }
+    .cart-count { position: absolute; top: -8px; right: -8px; background-color: red; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>Mi Tienda Online</h1>
+      <div>
+        <a href="index.html">Inicio</a> |
+        <a href="login.html">Iniciar Sesión</a> |
+        <a href="register.html">Registrarse</a> |
+        <div class="cart" style="display: inline-block;">
+          <a href="cart.html">Carrito</a>
+          <div class="cart-count" id="cart-count">0</div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Carrito de Compras</h2>
+    
+    <div id="cart-content">
+      <!-- El contenido del carrito se generará dinámicamente -->
+    </div>
+  </div>
+
+  <script>
+    // Cargar contenido del carrito
+    function loadCart() {
+      const cartContent = document.getElementById('cart-content');
+      const cartCountElement = document.getElementById('cart-count');
+      
+      // Cargar carrito de localStorage
+      const cartData = localStorage.getItem('cart');
+      const cart = cartData ? JSON.parse(cartData) : [];
+      
+      // Actualizar contador del carrito
+      const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+      cartCountElement.textContent = totalItems;
+      
+      // Si el carrito está vacío
+      if (cart.length === 0) {
+        cartContent.innerHTML = `
+          <div class="cart-empty">
+            <h3>Tu carrito está vacío</h3>
+            <p>No hay productos en tu carrito de compras.</p>
+            <p><a href="index.html">Continuar comprando</a></p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Calcular total
+      const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+      
+      // Generar tabla de productos
+      cartContent.innerHTML = `
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Precio</th>
+              <th>Cantidad</th>
+              <th>Subtotal</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cart.map(item => `
+              <tr>
+                <td>${item.name}</td>
+                <td>$${item.price.toFixed(2)}</td>
+                <td>
+                  <input type="number" min="1" value="${item.quantity}" class="quantity-input" data-id="${item.id}">
+                </td>
+                <td>$${(item.price * item.quantity).toFixed(2)}</td>
+                <td>
+                  <button class="remove-button" data-id="${item.id}">Eliminar</button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        
+        <div class="cart-summary">
+          <div class="continue-shopping">
+            <a href="index.html">Continuar comprando</a>
+          </div>
+          
+          <div class="cart-total">
+            <h3>Total: $${totalPrice.toFixed(2)}</h3>
+            <button class="checkout-button" id="checkout-button">Realizar Compra</button>
+          </div>
+        </div>
+      `;
+      
+      // Agregar eventos a los botones y campos
+      attachCartEvents();
+    }
+    
+    // Agregar eventos a los elementos del carrito
+    function attachCartEvents() {
+      // Evento para actualizar cantidad
+      document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('change', function() {
+          const id = parseInt(this.getAttribute('data-id'));
+          const quantity = parseInt(this.value);
+          
+          if (quantity < 1) {
+            this.value = 1;
+            return;
+          }
+          
+          updateCartItemQuantity(id, quantity);
+        });
+      });
+      
+      // Evento para eliminar productos
+      document.querySelectorAll('.remove-button').forEach(button => {
+        button.addEventListener('click', function() {
+          const id = parseInt(this.getAttribute('data-id'));
+          removeCartItem(id);
+        });
+      });
+      
+      // Evento para realizar compra
+      const checkoutButton = document.getElementById('checkout-button');
+      if (checkoutButton) {
+        checkoutButton.addEventListener('click', function() {
+          checkout();
+        });
+      }
+    }
+    
+    // Actualizar cantidad de un producto
+    function updateCartItemQuantity(id, quantity) {
+      // Cargar carrito actual
+      const cartData = localStorage.getItem('cart');
+      const cart = cartData ? JSON.parse(cartData) : [];
+      
+      // Buscar y actualizar el producto
+      const itemIndex = cart.findIndex(item => item.id === id);
+      if (itemIndex !== -1) {
+        cart[itemIndex].quantity = quantity;
+        
+        // Guardar carrito actualizado
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Recargar el carrito
+        loadCart();
+      }
+    }
+    
+    // Eliminar un producto del carrito
+    function removeCartItem(id) {
+      // Cargar carrito actual
+      const cartData = localStorage.getItem('cart');
+      const cart = cartData ? JSON.parse(cartData) : [];
+      
+      // Filtrar para eliminar el producto
+      const updatedCart = cart.filter(item => item.id !== id);
+      
+      // Guardar carrito actualizado
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      
+      // Recargar el carrito
+      loadCart();
+    }
+    
+    // Proceso de checkout
+    function checkout() {
+      alert('Gracias por tu compra. Redirigiendo al proceso de pago...');
+      
+      // En un sistema real, aquí redirigirías a la página de checkout
+      // Por ahora, simplemente limpiamos el carrito
+      localStorage.removeItem('cart');
+      
+      // Recargar el carrito
+      loadCart();
+    }
+    
+    // Cargar el carrito cuando se carga la página
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCart();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Mi Tienda Online</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    header { background-color: #4CAF50; color: white; padding: 1rem; }
+    nav { display: flex; justify-content: space-between; align-items: center; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+    .dashboard { margin-top: 2rem; }
+    .welcome-message { background-color: #f1f1f1; padding: 1rem; border-radius: 5px; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .stat-card { background-color: #f9f9f9; padding: 1rem; border-radius: 5px; text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: bold; margin: 0.5rem 0; }
+    .logout-button { background-color: #f44336; color: white; border: none; padding: 0.5rem 1rem; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>Mi Tienda Online</h1>
+      <div>
+        <span id="user-name">Cargando...</span> |
+        <a href="index.html">Inicio</a> |
+        <button class="logout-button" id="logout-button">Cerrar Sesión</button>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container" id="dashboard">
+    <div class="dashboard">
+      <div class="welcome-message">
+        <h2>Bienvenido a tu Dashboard</h2>
+        <p>Aquí puedes gestionar tu cuenta y ver tus pedidos recientes.</p>
+      </div>
+      
+      <div class="stats">
+        <div class="stat-card">
+          <h3>Pedidos</h3>
+          <div class="stat-value">5</div>
+          <p>Pedidos realizados</p>
+        </div>
+        
+        <div class="stat-card">
+          <h3>Lista de Deseos</h3>
+          <div class="stat-value">12</div>
+          <p>Productos guardados</p>
+        </div>
+        
+        <div class="stat-card">
+          <h3>Carrito</h3>
+          <div class="stat-value" id="cart-items">0</div>
+          <p>Productos en el carrito</p>
+        </div>
+        
+        <div class="stat-card">
+          <h3>Reseñas</h3>
+          <div class="stat-value">3</div>
+          <p>Reseñas publicadas</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const loggedInUser = localStorage.getItem('loggedInUser');
+
+      if (!loggedInUser) {
+        // Redirige al login si no hay usuario
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Mostrar nombre del usuario
+      const userNameElement = document.getElementById('user-name');
+      if (userNameElement) {
+        userNameElement.textContent = loggedInUser;
+      }
+
+      // Mostrar número de productos en carrito
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const cartItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+      const cartItemsElement = document.getElementById('cart-items');
+      if (cartItemsElement) {
+        cartItemsElement.textContent = cartItems;
+      }
+
+      // Cerrar sesión
+      const logoutBtn = document.getElementById('logout-button');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+          localStorage.removeItem('loggedInUser');
+          window.location.href = 'login.html';
+        });
+      }
+    });
+  </script>
+</body>
+</html>

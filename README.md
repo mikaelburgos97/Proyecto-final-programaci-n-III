@@ -1,6 +1,6 @@
 # Historias de Usuario para Pruebas Automatizadas con Selenium
 
-# Video & PDF: https://itlaedudo-my.sharepoint.com/:f:/g/personal/20209410_itla_edu_do/EqQ29lb9465OnACBQnLGyNEBPRg6uAHClk7Rsm8XmFKqQQ?e=4tMaK8
+# Video & PDF (screenshots): https://itlaedudo-my.sharepoint.com/:f:/g/personal/20209410_itla_edu_do/EqQ29lb9465OnACBQnLGyNEBPRg6uAHClk7Rsm8XmFKqQQ?e=4tMaK8
 
 ## Epic: Pruebas Automatizadas con Selenium
 
